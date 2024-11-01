@@ -562,9 +562,9 @@ public class invData {
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
-            if (addBomID) {
-             rows = _addBomMstr(y, con);   
-            }
+           // if (addBomID) {
+           //  rows = _addBomMstr(y, con);    done with save button in BOMM
+          //  }
             
            // if (rows > 0)
              rows = _addPBM(x, con);
@@ -593,8 +593,8 @@ public class invData {
         int rows = 0;
         String sqlSelect = "select * from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ?";
         String sqlInsert = "insert into pbm_mstr (ps_parent, ps_child, ps_qty_per, " 
-                        + "ps_op, ps_ref, ps_type, ps_bom, ps_serialized ) "
-                        + " values (?,?,?,?,?,?,?,?); "; 
+                        + "ps_op, ps_ref, ps_type, ps_bom, ps_serialized, ps_routing ) "
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
        
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.ps_parent);
@@ -612,6 +612,7 @@ public class invData {
             psi.setString(6, x.ps_type);
             psi.setString(7, x.ps_bom);
             psi.setString(8, x.ps_serialized);
+            psi.setString(9, x.ps_routing);
             rows = psi.executeUpdate();
             } 
             ps.close();
@@ -627,8 +628,8 @@ public class invData {
         
         String sqlSelect = "select * from bom_mstr where bom_id = ? and bom_item = ?;";
         String sqlInsert = "insert into bom_mstr (bom_id, bom_desc, bom_item, " 
-                        + "bom_enabled, bom_primary ) "
-                        + " values (?,?,?,?,?); "; 
+                        + "bom_enabled, bom_primary, bom_routing ) "
+                        + " values (?,?,?,?,?,?); "; 
        
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.bom_id);
@@ -649,6 +650,7 @@ public class invData {
             psi.setString(3, x.bom_item);
             psi.setString(4, x.bom_enabled);
             psi.setString(5, x.bom_primary);
+            psi.setString(6, x.bom_routing);
             rows = psi.executeUpdate();
             } 
             ps.close();
@@ -670,9 +672,10 @@ public class invData {
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
+            /*  now done by save button in BOMM
             _updateBomMstr(y, con); // the bom_mstr gets updated every time a component is updated
                                     // where a change to bom_mstr has occurred or not
-            
+            */
             rows = _updatePBM(x, con); 
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -697,46 +700,106 @@ public class invData {
     private static int _updatePBM(pbm_mstr x, Connection con) throws SQLException {
         int rows = 0;
         String sqlUpdate = "update pbm_mstr set ps_qty_per = ?, " 
-                        + "ps_ref = ?, ps_type = ?, ps_serialized = ? "
+                        + "ps_ref = ?, ps_type = ?, ps_serialized = ?, ps_routing = ? "
                         + " where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ? ";
             PreparedStatement psu = con.prepareStatement(sqlUpdate); 
             psu.setString(1, x.ps_qty_per);
             psu.setString(2, x.ps_ref);
             psu.setString(3, x.ps_type);
             psu.setString(4, x.ps_serialized);
-            psu.setString(5, x.ps_parent);
-            psu.setString(6, x.ps_child);
-            psu.setString(7, x.ps_op);
-            psu.setString(8, x.ps_bom);
+            psu.setString(5, x.ps_routing);
+            psu.setString(6, x.ps_parent);
+            psu.setString(7, x.ps_child);
+            psu.setString(8, x.ps_op);
+            psu.setString(9, x.ps_bom);
             
             rows = psu.executeUpdate();
             psu.close();
         return rows;
     }
     
-    private static int _updateBomMstr(bom_mstr x, Connection con) throws SQLException {
+    public static String[] addupdateBOMMstr(bom_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        int rows = 0;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            
+            rows = _addupdateBomMstr(x, con); // the bom_mstr gets updated every time a component is updated
+                                    // where a change to bom_mstr has occurred or not
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addupdateBomMstr(bom_mstr x, Connection con) throws SQLException {
         int rows = 0;
         // if bom_primary is true...then must reset all other bom_mstr records for this item as false
-        String sqlReset = "update bom_mstr set bom_primary = '0' where bom_item = ?;";
-        
-        if (x.bom_primary.equals("1")) {
-            PreparedStatement psr = con.prepareStatement(sqlReset); 
-            psr.setString(1, x.bom_item);
-            rows = psr.executeUpdate();
-            psr.close();
-        }
-        
+        String sqlReset = "update bom_mstr set bom_primary = '0' where bom_item = ? and bom_id <> ?;";
+        String sqlSelect = "select * from bom_mstr where bom_id = ? and bom_item = ?;";
+        String sqlInsert = "insert into bom_mstr (bom_id, bom_desc, bom_item, " 
+                        + "bom_enabled, bom_primary, bom_routing ) "
+                        + " values (?,?,?,?,?,?); "; 
         String sqlUpdate = "update bom_mstr set bom_desc = ?, " 
                         + "bom_enabled = ?, bom_primary = ? "
                         + " where bom_id = ? and bom_item = ? ";
-            PreparedStatement psu = con.prepareStatement(sqlUpdate); 
-            psu.setString(1, x.bom_desc);
-            psu.setString(2, x.bom_enabled);
-            psu.setString(3, x.bom_primary);
-            psu.setString(4, x.bom_id);
-            psu.setString(5, x.bom_item);
-            rows = psu.executeUpdate();
-            psu.close();
+        
+         PreparedStatement ps = con.prepareStatement(sqlSelect);
+         PreparedStatement psi = con.prepareStatement(sqlInsert);  
+            ps.setString(1, x.bom_id);
+            ps.setString(2, x.bom_item);
+            ResultSet res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                psi.setString(1, x.bom_id);
+                psi.setString(2, x.bom_desc);
+                psi.setString(3, x.bom_item);
+                psi.setString(4, x.bom_enabled);
+                psi.setString(5, x.bom_primary);
+                psi.setString(6, x.bom_routing);
+                rows = psi.executeUpdate(); 
+                psi.close();
+            } else {
+               PreparedStatement psu = con.prepareStatement(sqlUpdate); 
+                psu.setString(1, x.bom_desc);
+                psu.setString(2, x.bom_enabled);
+                psu.setString(3, x.bom_primary);
+                psu.setString(4, x.bom_id);
+                psu.setString(5, x.bom_item);
+                rows = psu.executeUpdate();
+                psu.close(); 
+            }
+            
+            if (x.bom_primary.equals("1")) { // inserting record as primary....remove all other primaries for this item before inserting record
+                PreparedStatement psr = con.prepareStatement(sqlReset); 
+                psr.setString(1, x.bom_item);
+                 psr.setString(2, x.bom_id);
+                rows = psr.executeUpdate();
+                psr.close();
+            }
+        
+        
         return rows;
     }
     
@@ -815,7 +878,8 @@ public class invData {
                                 res.getString("bom_desc"),
                                 res.getString("bom_item"),
                                 res.getString("bom_enabled"),
-                                res.getString("bom_primary"));
+                                res.getString("bom_primary"),
+                                res.getString("bom_routing"));
                     }
                 }
             }
@@ -2024,6 +2088,83 @@ public class invData {
    
 
     /* misc functions */
+    public static ArrayList<String> getRoutingOperations(String routing) {
+          ArrayList<String> r = new ArrayList<String>();
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select wf_op from wf_mstr " +
+                        " where wf_id = " + "'" + routing + "'" + " order by wf_op ;" );
+               
+                while (res.next()) {
+                   r.add(res.getString("wf_op"));
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return r; 
+        
+    }
+   
+    public static ArrayList<String> getRoutingOperationsByBOM(String bomid) {
+          ArrayList<String> r = new ArrayList<String>();
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select wf_op from wf_mstr inner join bom_mstr on bom_routing = wf_id " +
+                        " where bom_id = " + "'" + bomid + "'" + " order by wf_op ;" );
+               
+                while (res.next()) {
+                   r.add(res.getString("wf_op"));
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return r; 
+        
+    }
+   
+    
     public static ArrayList<String[]> getInvMaintInit() {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
@@ -2120,6 +2261,64 @@ public class invData {
     }
         return lines;
     }
+    
+    public static void resetBOMDefault(String item) {
+       
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        try{
+            st.executeUpdate("update bom_mstr set bom_primary = '0' where bom_item = " + "'" + item + "'" + ";" );
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+    }
+    
+    public static void updateBOMDefault(String bomid, String item, String value) {
+       
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        try{
+            st.executeUpdate("update bom_mstr set bom_primary = " + "'" + value + "'" + " where bom_item = " + "'" + item + "'" +
+                    " and bom_id = " + "'" + bomid + "'" + ";" );
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+    }
+    
     
     public static String[] getWHLOCfromSerialNumber(String item, String serial) {
         String[] r = null ;
@@ -3060,7 +3259,7 @@ public class invData {
 
         }
 
-    public static ArrayList getBOMInit(String item, String site) {
+    public static ArrayList getBOMInit(String item, String site, String bomid) {
                ArrayList myarray = new ArrayList();
              try{
                 Connection con = null;
@@ -3075,6 +3274,7 @@ public class invData {
                 
             String[] sites = null;
             boolean allsites = false;
+            String bomrouting = "";
             res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
             while (res.next()) {
               if (res.getString("user_allowedsites").equals("*")) {
@@ -3095,34 +3295,46 @@ public class invData {
                     
                     
                 // get default bom for item    
-                ArrayList<String> boms = new ArrayList<String>();
-                String bomid = "";
-                int i = 0;
-                res = st.executeQuery("select distinct ps_bom from pbm_mstr "
-                        + " where ps_parent = " + "'" + item + "';");
-                while (res.next()) {
-                    i++;
-                  boms.add(res.getString("ps_bom")); 
-                }
-                res.close();
-                if (i > 0) {
-                    for (String s : boms) {
-                        res = st.executeQuery("select bom_id from bom_mstr "
-                        + " where bom_id = " + "'" + s + "'" +
-                          " and bom_primary = '1' " + ";");
-                        while (res.next()) {
-                           bomid = res.getString("bom_id");
-                           String[] arr = new String[]{"defaultbom",res.getString("bom_id")};
-                           myarray.add(arr);
-                        } 
+                if (bomid.isBlank()) {
+                    ArrayList<String> boms = new ArrayList<String>();
+                    int i = 0;
+                    res = st.executeQuery("select distinct ps_bom from pbm_mstr "
+                            + " where ps_parent = " + "'" + item + "';");
+                    while (res.next()) {
+                        i++;
+                      boms.add(res.getString("ps_bom")); 
+                    }
+                    res.close();
+                    if (i > 0) {
+                        for (String s : boms) {
+                            res = st.executeQuery("select bom_id, bom_routing from bom_mstr "
+                            + " where bom_id = " + "'" + s + "'" +
+                              " and bom_primary = '1' " + ";");
+                            while (res.next()) {
+                               bomid = res.getString("bom_id");
+                               bomrouting = res.getString("bom_routing");
+                               String[] arr = new String[]{"defaultbom",res.getString("bom_id")};
+                               myarray.add(arr);
+                               arr = new String[]{"defaultrouting",res.getString("bom_routing")};
+                               myarray.add(arr);
+                            } 
+                        }
                     }
                 }
-                    
-                res = st.executeQuery("select it_wf from item_mstr where it_item = " + "'" + item + "'" +  ";" );
-                while (res.next()) { 
-                 String[] arr = new String[]{"routing",res.getString("it_wf")};
-                 myarray.add(arr); 
-                }  
+                
+                if (bomrouting.isBlank()) {  // get routing from item level if there is no primary bomid
+                    res = st.executeQuery("select it_wf from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+                    while (res.next()) { 
+                     String[] arr = new String[]{"defaultrouting",res.getString("it_wf")};
+                     myarray.add(arr); 
+                    } 
+                }
+                
+                res = st.executeQuery("select distinct wf_id from wf_mstr order by wf_id ;" );
+                    while (res.next()) {
+                    String[] arr = new String[]{"routings",res.getString("wf_id")};
+                    myarray.add(arr); 
+                    }
                 
                 res = st.executeQuery("select it_lotsize from item_mstr where it_item = " + "'" + item + "'" +  ";" );
                 while (res.next()) {
@@ -3150,7 +3362,14 @@ public class invData {
                  myarray.add(arr);
                 }
                 
-                res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + " order by wf_op ;");
+                if (! bomid.isBlank()) {
+                res = st.executeQuery("select wf_op from wf_mstr inner join bom_mstr on bom_routing = wf_id where bom_item = " + "'" + item + "'" + 
+                        " and bom_id = " + "'" + bomid + "'" +
+                        " order by wf_op ;");
+                } else {
+                    res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
+                        " order by wf_op ;");
+                }
                 while (res.next()) {
                  String[] arr = new String[]{"operations",res.getString("wf_op")};
                  myarray.add(arr);
@@ -4748,7 +4967,7 @@ public class invData {
 
     }
 
-    public static ArrayList getItemRoutingOPs(String myitem) {
+    public static ArrayList<String> getItemRoutingOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
         Connection con = null;
@@ -5627,16 +5846,16 @@ public class invData {
     
     public record pbm_mstr(String[] m, String ps_parent, String ps_child,
         String ps_qty_per, String ps_op, String ps_ref, String ps_type, String ps_bom, 
-        String ps_misc1, String ps_desc, String ps_serialized) {
+        String ps_misc1, String ps_desc, String ps_serialized, String ps_routing) {
         public pbm_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     
     public record bom_mstr(String[] m, String bom_id, String bom_desc,
-        String bom_item, String bom_enabled, String bom_primary) {
+        String bom_item, String bom_enabled, String bom_primary, String bom_routing) {
         public bom_mstr(String[] m) {
-            this(m, "", "", "", "", "");
+            this(m, "", "", "", "", "", "");
         }
     }
     

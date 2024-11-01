@@ -523,8 +523,9 @@ public static void main(String args[]) throws IOException {
                 deleteFile = false;
                 if (listOfFiles[i].isFile()) {
                   if(listOfFiles[i].length() == 0) { 
-                  System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " zerosize" ); 
-                  listOfFiles[i].delete();
+                  System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " zerosize...leave for next event" ); 
+                  continue;
+                 // listOfFiles[i].delete();
                   } else { 
                   for (String[] s : trafficarray) {
                       if (listOfFiles[i].getName().contains(s[0])) {

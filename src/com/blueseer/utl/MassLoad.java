@@ -450,6 +450,8 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("ps_misc1,s,30,optional,unvalidated");
         list.add("ps_ref,s,30,optional,unvalidated");
         list.add("ps_bom,s,36,optional,unvalidated");
+        list.add("ps_serialized,b,1,optional, validated (1 or 0)");
+        list.add("ps_routing,s,30,optional,unvalidated");
         
         return list;
     }

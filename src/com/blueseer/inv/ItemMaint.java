@@ -40,6 +40,7 @@ import com.blueseer.inv.invData.item_mstr;
 import static com.blueseer.inv.invData.addItemMstr;
 import static com.blueseer.inv.invData.deleteItemMstr;
 import static com.blueseer.inv.invData.getItemMstr;
+import static com.blueseer.inv.invData.resetBOMDefault;
 import static com.blueseer.inv.invData.updateCurrentItemCost;
 import static com.blueseer.inv.invData.updateItemMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -141,6 +142,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 boolean isLoad = false;
                 public static item_mstr x = null;
                 String lastfcdir = "";
+                String defaultrouting = "";
    
                 
    // global datatablemodel declarations    
@@ -638,7 +640,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
    
     public String[] updateRecord(String[] x) {
       
-      
+       if (ddrouting.getSelectedItem() != null && ! ddrouting.getSelectedItem().toString().equals(defaultrouting)) {
+           boolean proceed = bsmf.MainFrame.warn(getMessageTag(1191));
+            if (proceed) {
+               resetBOMDefault(tbkey.getText());
+            } else {
+                return new String[]{"1", getMessageTag(1192)};
+            }
+       }
+        
         double mtlcost = 0;
         if (! tbmtlcost.getText().isEmpty()) {
             mtlcost = bsParseDouble(tbmtlcost.getText());
@@ -790,6 +800,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddwh.setSelectedItem(x.it_wh());
         ddloc.setSelectedItem(x.it_loc());
         ddrouting.setSelectedItem(x.it_wf());
+        defaultrouting = x.it_wf();
         revlevel.setText(x.it_rev());
         custrevlevel.setText(x.it_custrev()); 
         tbdefaultcont.setText(x.it_cont());

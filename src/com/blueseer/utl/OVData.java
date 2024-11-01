@@ -3620,7 +3620,8 @@ public class OVData {
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item); 
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
-         myops = invData._getItemWFOPs(item, bscon);   // based on it_wf and wf_mstr
+       //  myops = invData._getItemWFOPs(item, bscon);   // based on it_wf and wf_mstr
+        myops = invData.getRoutingOperationsByBOM(bomid);  // based on the specific BOM id
         for ( String myvalue : myops) {
           //  DefaultMutableTreeNode thisop = new DefaultMutableTreeNode(myvalue);
           //  mynode.add(thisop);
@@ -3664,52 +3665,7 @@ public class OVData {
         return mynode;
      } 
          
-    public static DefaultMutableTreeNode get_op_nodes(String item)  {  
-       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item);
-       ArrayList<String> myops = new ArrayList<String>();
-        //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
-         myops = invData.getItemWFOPs(item);   // based on it_wf and wf_mstr
-        for ( String myvalue : myops) {
-          //  DefaultMutableTreeNode thisop = new DefaultMutableTreeNode(myvalue);
-          //  mynode.add(thisop);
-            DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
-            
-            opnode = OVData.get_nodes_by_op_detail(item, item, myvalue);
-            mynode.add(opnode);
-        }
-       return mynode;
-      }
       
-    public static DefaultMutableTreeNode get_nodes_by_op_detail(String root, String item, String myop)  {
-        //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
-        String myroot = "";
-            if (root.toLowerCase().equals(item.toLowerCase()))
-            myroot = myop;
-        else
-            myroot = item;
-         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myroot);
-         
-        
-        ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(item, myop);
-     //   mylist = OVData.getpsmstrlist(newpart[0]);
-        for ( String myvalue : mylist) {
-            String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
-               
-                  if (value[2].toUpperCase().compareTo("M") == 0) {
-                    DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_op_nodes(value[1]);
-                    mynode.add(mfgnode);
-                  } else {
-                  DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
-                 
-                  mynode.add(childnode);
-                  }
-              }
-        }
-        return mynode;
-     } 
       
     public static DefaultMutableTreeNode get_nodes_by_op(String item, String myop)  {
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
@@ -3760,35 +3716,7 @@ public class OVData {
         return mynode;
      }
           
-    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String item, String myop)  {
-        String myroot = "";
-            if (root.toLowerCase().equals(item.toLowerCase()))
-            myroot = myop;
-        else
-            myroot = item;
-         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myroot);
-         
-        
-        ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(item, myop);
-     //   mylist = OVData.getpsmstrlist(newpart[0]);
-        for ( String myvalue : mylist) {
-            String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
-               
-                  if (value[2].toUpperCase().compareTo("M") == 0) {
-                    DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_nodes_by_op_stripped(root, value[1] ,myop);
-                    mynode.add(mfgnode);
-                  } else {
-                  DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
-                 
-                  mynode.add(childnode);
-                  }
-              }
-        }
-        return mynode;
-     }
+   
     // END of BOM Tree by Operation 
     
     public static ArrayList getpsmstrlist(String item) {
@@ -4077,58 +4005,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrlistbyop(String item, String myop) {
-        ArrayList myarray = new ArrayList();
-        String mystring = "";
-        try {
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr "
-                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
-                        + " inner join item_mstr on it_item = ps_child "
-                        + " where ps_parent = " + "'" + item + "'"
-                        + " and ps_op = " + "'" + myop + "'"       
-                        + ";");
-                while (res.next()) {
-                    mystring = res.getString("ps_parent") + ","
-                            + res.getString("ps_child") + ","
-                            + res.getString("ps_type") + ","
-                            + res.getString("ps_qty_per") + ","
-                            + res.getString("it_desc").replace(",","");
-
-                    myarray.add(mystring);
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
+   
     public static ArrayList getpsmstrlistbyopnew(String item, String myop, String bomid) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
@@ -4530,6 +4407,49 @@ public class OVData {
 
     }
 
+    public static boolean isBOMUnique(String bom, String item, String routing) {
+       boolean r = true;
+       ArrayList<String> boms = new ArrayList<String>();
+        try {
+            
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select bom_routing from bom_mstr "
+                        + " where bom_id = " + "'" + bom + "'" +
+                        " and bom_item = " + "'" + item + "'" + ";");
+                while (res.next()) {
+                    if (! res.getString("bom_routing").toLowerCase().equals(routing.toLowerCase())) {
+                        r = false;
+                    } 
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+               
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return r;
+
+    }
+
     public static int getBomPbmCount(String bomid) {
        int x = 0;
         try {
@@ -4788,13 +4708,14 @@ public class OVData {
 
                     if (j == 0) {
                         st.executeUpdate(" insert into bom_mstr "
-                                + "(bom_id, bom_desc, bom_item, bom_enabled, bom_primary ) "
+                                + "(bom_id, bom_desc, bom_item, bom_enabled, bom_primary, bom_routing ) "
                                 + " values ( "
                                 + "'" + ld[0] + "'" + ","
                                 + "'" + ld[1] + "'" + ","
                                 + "'" + ld[2] + "'" + ","
                                 + "'" + ld[3] + "'" + ","
-                                + "'" + ld[4] + "'"       
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[17] + "'"
                                 + ");"
                         );
                     }
@@ -4813,7 +4734,7 @@ public class OVData {
 
                     if (j == 0) {
                         st.executeUpdate(" insert into pbm_mstr "
-                                + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref, ps_bom ) "
+                                + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref, ps_bom, ps_serialized, ps_routing ) "
                                 + " values ( "
                                 + "'" + ld[5] + "'" + ","
                                 + "'" + ld[6] + "'" + ","
@@ -4825,7 +4746,9 @@ public class OVData {
                                 + "'" + ld[12] + "'" + ","
                                 + "'" + ld[13] + "'" + ","
                                 + "'" + ld[14] + "'" + ","
-                                + "'" + ld[15] + "'"        
+                                + "'" + ld[15] + "'" + ","
+                                + "'" + ld[16] + "'" + ","
+                                + "'" + ld[17] + "'"        
                                 + ");"
                         );
                     }
@@ -12593,7 +12516,7 @@ return myarray;
 
      }
 
-    public static Double _getLaborAllOps(String item, Connection bscon) {
+    public static Double _getLaborAllOps(String item, String bom, Connection bscon) {
 
          Double labor = 0.0;
          try{
@@ -12605,9 +12528,12 @@ return myarray;
             
 
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
-                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join bom_mstr on bom_routing = wf_id " +
+                    " inner join item_mstr on it_item = bom_item " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " +
-                    " where it_item = " + "'" + item + "'" + ";");
+                    " where it_item = " + "'" + item + "'" + 
+                    " and bom_id = " + "'" + bom + "'" +
+                    ";");
            while (res.next()) {
 
             if (res.getDouble("it_lotsize") == 0) {
@@ -12656,7 +12582,7 @@ return myarray;
             
 
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
-                    " inner join item_mstr on it_wf = wf_id " + 
+                     " inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " +
                     " where it_item = " + "'" + item + "'" + ";");
            while (res.next()) {
@@ -12686,7 +12612,7 @@ return myarray;
 
      }
 
-    public static Double _getBurdenAllOps(String item, Connection bscon) {
+    public static Double _getBurdenAllOps(String item, String bom, Connection bscon) {
 
          Double burden = 0.0;
 
@@ -12699,9 +12625,12 @@ return myarray;
             
 
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
-                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join bom_mstr on bom_routing = wf_id " +
+                    " inner join item_mstr on it_item = bom_item " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " +
-                    " where it_item = " + "'" + item + "'" + ";");
+                    " where it_item = " + "'" + item + "'" + 
+                    " and bom_id = " + "'" + bom + "'" +
+                    ";");
            while (res.next()) {
             if (res.getDouble("it_lotsize") == 0) {
                 burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +

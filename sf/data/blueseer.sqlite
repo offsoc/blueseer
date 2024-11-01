@@ -1411,7 +1411,8 @@ CREATE TABLE "bom_mstr" (
   "bom_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "bom_item" varchar(36) COLLATE NOCASE DEFAULT '',
   "bom_enabled" tinyint(1) NOT NULL DEFAULT '0',
-  "bom_primary" tinyint(1) NOT NULL DEFAULT '0'
+  "bom_primary" tinyint(1) NOT NULL DEFAULT '0',
+  "bom_routing" varchar(30) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1428,7 +1429,8 @@ CREATE TABLE "pbm_mstr" (
   "ps_misc1" varchar(30) COLLATE NOCASE DEFAULT '',
   "ps_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "ps_bom" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
-  "ps_serialized" tinyint(1) NOT NULL DEFAULT '0'
+  "ps_serialized" tinyint(1) NOT NULL DEFAULT '0',
+  "ps_routing" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
