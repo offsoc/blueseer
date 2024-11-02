@@ -420,6 +420,13 @@ public class BOMMaint extends javax.swing.JPanel {
         btupdate.setEnabled(false);
         btadd.setEnabled(false);
         tbbomid.setEnabled(false);
+        
+        if (cbdefault.isSelected()) {
+            btroll.setEnabled(true);
+        } else {
+            btroll.setEnabled(false);
+        }
+        
         if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
            tbkey.setEditable(false);
@@ -1145,6 +1152,11 @@ public class BOMMaint extends javax.swing.JPanel {
        tbparentcostCUR.setBackground(Color.white); 
        tbparentcostSTD.setBackground(Color.white);
        
+       btroll.setEnabled(false);
+       btadd.setEnabled(false);
+       btupdate.setEnabled(false);
+       btdelete.setEnabled(false);
+       btpdf.setEnabled(false);
      //  ddrouting.removeAllItems();
      //  ddcomp.removeAllItems();
         ddop.removeAllItems();
@@ -2320,7 +2332,8 @@ public class BOMMaint extends javax.swing.JPanel {
         newbomid = true;
         btnewbom.setEnabled(false);
         btlookupbom.setEnabled(false);
-        btadd.setEnabled(true);
+        btadd.setEnabled(false);
+        btupdate.setEnabled(false);
         tbbomid.setEnabled(true);
         if (! bomexist) {
             // must be first BOM...use item number as default bom id
@@ -2344,7 +2357,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
     private void ddroutingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddroutingActionPerformed
         if (! isLoad) {
-            System.out.println("firing...");
+          //  System.out.println("firing...");
          resetForm();
         }
     }//GEN-LAST:event_ddroutingActionPerformed
@@ -2354,11 +2367,21 @@ public class BOMMaint extends javax.swing.JPanel {
             return;
         }
         
+        if (! OVData.isBOMUnique(tbbomid.getText(), tbkey.getText(), ddrouting.getSelectedItem().toString())) {
+            bsmf.MainFrame.show(getMessageTag(1115));
+            tbbomid.requestFocus();
+            return;
+        }
+        
         if (! cbdefault.isSelected() && tbbomid.getText().equals(getDefaultBomID(tbkey.getText())) ) {
             bsmf.MainFrame.show("Cannot de-select the primary.  Must select another as primary.");
             return;
         }
         addupdateBOMMstr(createRecordBomMstr());
+        
+        btlookupbom.setEnabled(true);
+        btadd.setEnabled(true);
+        
         bsmf.MainFrame.show("BOM has been updated");
     }//GEN-LAST:event_btsaveActionPerformed
 

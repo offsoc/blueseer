@@ -32,6 +32,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData._getDefaultBOMID;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
@@ -318,10 +319,16 @@ public class calcCost {
       
     public void _getTotalCostRecursive(String mypart, double perqty, String bom, Connection bscon)  {
         lastlevel++;
+        String thisbom = "";
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
-        if (lastlevel == 1 && ! bom.isEmpty()) {
-        mylist = OVData._getpsmstrlist(newpart[0], bom, bscon);
+        if (lastlevel == 1) {
+            if (bom.isBlank()) {
+             thisbom = _getDefaultBOMID(mypart, bscon);
+            } else {
+             thisbom = bom;
+            }
+        mylist = OVData._getpsmstrlist(newpart[0], thisbom, bscon);
         } else {
         mylist = OVData._getpsmstrlist(newpart[0], bscon);     
         }
@@ -334,10 +341,10 @@ public class calcCost {
                 //    MainFrame.show(mypart + " / " + thisovhcost + " / " + ovhcost);
         }
         
-         thislbrcost = OVData._getLaborAllOps(newpart[0], bom, bscon);
+         thislbrcost = OVData._getLaborAllOps(newpart[0], thisbom, bscon);
           lbrcost = lbrcost + thislbrcost;
         
-         thisbdncost = OVData._getBurdenAllOps(newpart[0], bom,  bscon);
+         thisbdncost = OVData._getBurdenAllOps(newpart[0], thisbom,  bscon);
           bdncost = bdncost + thisbdncost; 
           
           
