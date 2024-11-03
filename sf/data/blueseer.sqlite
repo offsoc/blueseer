@@ -1217,7 +1217,9 @@ CREATE TABLE "item_cost" (
   "itc_lbr_low" decimal(9,5) NOT NULL DEFAULT '0.00000',
   "itc_bdn_low" decimal(9,5) NOT NULL DEFAULT '0.00000',
   "itc_ovh_low" decimal(9,5) NOT NULL DEFAULT '0.00000',
-  "itc_out_low" decimal(9,5) NOT NULL DEFAULT '0.00000');
+  "itc_out_low" decimal(9,5) NOT NULL DEFAULT '0.00000',
+  "itc_bom" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1296,7 +1298,9 @@ CREATE TABLE "itemr_cost" (
   "itr_ovh_low" decimal(8,5) COLLATE NOCASE DEFAULT '',
   "itr_out_low" decimal(8,5) COLLATE NOCASE DEFAULT '',
   "itr_date" date DEFAULT '0000-00-00',
-  "itr_userid" varchar(20) COLLATE NOCASE DEFAULT '');
+  "itr_userid" varchar(20) COLLATE NOCASE DEFAULT '',
+  "itr_bom" varchar(30) COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
