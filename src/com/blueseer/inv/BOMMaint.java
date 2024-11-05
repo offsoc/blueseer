@@ -759,7 +759,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 getComponents(tbkey.getText(),target.getValueAt(row,1).toString());
                 callSimulateCost();
                 updateCurrentItemCost(tbkey.getText());
-                getCurrentCost(tbkey.getText().toString());
+                getCurrentCost(x.bom_item(), x.bom_id());
                 cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
                 cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
                 tbbomdesc.setText(x.bom_desc());
@@ -837,11 +837,11 @@ public class BOMMaint extends javax.swing.JPanel {
           tbbomid.setText(BomID);
           //getComponents(x.bom_item(), BomID);
           
-          bind_tree(x.bom_item(), BomID);
+          bind_tree(x.bom_item(), x.bom_id());
          
           callSimulateCost();
          
-          getCurrentCost(x.bom_item());
+          getCurrentCost(x.bom_item(), x.bom_id());
           
           cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
           cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
@@ -860,7 +860,7 @@ public class BOMMaint extends javax.swing.JPanel {
         getComponents(tbkey.getText(), tbbomid.getText());
         callSimulateCost();
         updateCurrentItemCost(tbkey.getText());
-        getCurrentCost(tbkey.getText().toString());
+        getCurrentCost(tbkey.getText(), tbbomid.getText());
         setAction(x.m());
         
     }
@@ -877,8 +877,10 @@ public class BOMMaint extends javax.swing.JPanel {
         setAction(new String[]{"0","roll complete"});
     }
     
-    public void getCurrentCost(String parent) {
-         
+    public void getCurrentCost(String item, String bom) {
+        
+        calcCost cur = new calcCost();
+        currentcost = cur.getTotalCost(item, bom);
         
         tbparentcostCUR.setText(bsFormatDouble5(currentcost.get(0) + currentcost.get(1) + currentcost.get(2) + currentcost.get(3) + currentcost.get(4)));
         tbtotoperational.setText(bsFormatDouble5(currentcost.get(1) + currentcost.get(2) + currentcost.get(3) + currentcost.get(4)));
@@ -1137,8 +1139,8 @@ public class BOMMaint extends javax.swing.JPanel {
    
     public void resetForm() {
        isLoad = true; 
-       bomexist = false;
-       newbomid = false;
+      // bomexist = false;
+      // newbomid = false;
        parent = "";
        
        //tbkey.setText("");
@@ -2330,6 +2332,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
     private void btnewbomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewbomActionPerformed
         newbomid = true;
+        resetForm();
         btnewbom.setEnabled(false);
         btlookupbom.setEnabled(false);
         btadd.setEnabled(false);
