@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="part" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="op" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="qty" class="java.lang.Double"/>
+	<parameter name="bom" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ps_child, it_desc, ps_qty_per, itc_total, it_uom from pbm_mstr 
+left outer join item_mstr on it_item = ps_child 
+inner join item_cost  on itc_item = ps_child and itc_set = 'standard' 
+where ps_parent = $P{part} and ps_op = $P{op} and ps_bom = $P{bom};]]>
+	</queryString>
+	<field name="ps_child" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_child"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="it_desc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ps_qty_per" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="ps_qty_per"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="it_uom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_uom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+	</field>
+	<field name="itc_total" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="83" height="12" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ps_child}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="0" width="100" height="12" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="0" width="40" height="12" uuid="31e0f31c-3421-4ce5-b2f5-029e138baea2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ps_qty_per}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="251" y="0" width="51" height="12" uuid="376bf610-50f0-44c2-ba89-11ccb31a88cc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{it_uom}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="310" y="0" width="70" height="12" uuid="b9522713-cdc5-4fc4-acb7-18f8d3a62f10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{itc_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

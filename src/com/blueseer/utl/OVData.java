@@ -18044,7 +18044,7 @@ return mystring;
                 logo = OVData.getSiteLogo(OVData.getDefaultSite());
                 
                 
-               String jasperfile = "bom_generic.jasper";
+               String jasperfile = "bom_operational.jasper";
                //jasperfile = OVData.getDefaultOrderJasper(site);
                
                Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagepath" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mybom" class="java.lang.String"/>
+	<parameter name="curcost" class="java.lang.String"/>
+	<parameter name="matcost" class="java.lang.String"/>
+	<parameter name="opcost" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select it_item, it_desc, bom_id, wf_id, wf_desc, wf_op, wf_op_desc,wf_run_hours,
+wc_run_rate, wc_bdn_rate,
+(select sum(itr_mtl_low + itr_mtl_top) from itemr_cost where itr_item = it_item and itr_set = 'standard') as 'totmtl',
+(select sum(itr_lbr_low + itr_lbr_top) from itemr_cost where itr_item = it_item  and itr_set = 'standard') as 'totlbr',
+(select sum(itr_bdn_low + itr_bdn_top) from itemr_cost where itr_item = it_item  and itr_set = 'standard') as 'totbdn'
+from item_mstr
+inner join bom_mstr on bom_item = it_item
+inner join wf_mstr on wf_id = bom_routing
+inner join wc_mstr on wc_cell = wf_cell
+where it_item  =  $P{myid} and bom_id = $P{mybom}
+order by wf_op;
+]]>
+	</queryString>
+	<field name="it_item" class="java.lang.String"/>
+	<field name="it_desc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bom_id" class="java.lang.String"/>
+	<field name="wf_op" class="java.lang.Integer"/>
+	<field name="wf_op_desc" class="java.lang.String"/>
+	<field name="wf_run_hours" class="java.lang.Double"/>
+	<field name="totmtl" class="java.lang.Double"/>
+	<field name="totlbr" class="java.lang.Double"/>
+	<field name="totbdn" class="java.lang.Double"/>
+	<field name="wf_id" class="java.lang.String"/>
+	<field name="wc_bdn_rate" class="java.lang.Double"/>
+	<field name="wc_run_rate" class="java.lang.Double"/>
+	<variable name="mysum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{wf_run_hours}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<image>
+				<reportElement x="9" y="0" width="91" height="42" uuid="7d194944-b350-420d-ab9b-682f45a43dc9"/>
+				<imageExpression><![CDATA[$P{imagepath}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="160" y="0" width="100" height="31" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode128($F{it_item}))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="312" y="0" width="198" height="36" uuid="77e00d3d-36b9-47b0-ae80-1f33ccb0ff91"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblbom}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="417" y="0" width="80" height="20" uuid="c838f78f-8f27-4e07-b216-d42e6f860995"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblpage} + " " + $V{PAGE_NUMBER}+" " + $R{jasper.bomop.lblof} + " "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="497" y="0" width="40" height="20" uuid="7bb51d99-d65a-48b5-86af-507492912f2e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="39" width="62" height="19" uuid="39be8147-2c50-48d2-89f2-9f365be9396a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lbldate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yy">
+				<reportElement x="482" y="38" width="66" height="20" uuid="9af12406-6714-4cf5-ae65-6668bf752aa1"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yyyy").format( new java.util.Date() )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="29" y="10" width="61" height="19" uuid="899cf146-94c5-4fbe-a916-eafb2ee0d1ae"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblitem}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="10" width="66" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
+				<textFieldExpression><![CDATA[$F{it_item}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="32" width="61" height="19" uuid="bb696aa7-61c9-48ce-bdb8-b1261267d3d9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lbldesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="32" width="159" height="19" uuid="7de1c4e6-3317-4cea-87bd-1a102f1a4612"/>
+				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="56" width="80" height="19" uuid="407272ca-6ecb-4d69-9f43-89d1758070d8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lbloptotcost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="100" y="56" width="62" height="16" uuid="bf1434d6-06cf-42c0-8a62-1cd1f6dd66e3"/>
+				<textFieldExpression><![CDATA[$P{opcost}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="78" width="80" height="19" uuid="df06f1d5-545b-4501-b0d1-25f4531a6365"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblmatcost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ ###0.00###">
+				<reportElement x="101" y="78" width="62" height="16" uuid="c7e8159d-aa08-4ef1-92e0-695c54ca9a96"/>
+				<textFieldExpression><![CDATA[$P{matcost}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="100" width="80" height="19" uuid="ba68d7da-86fb-4df5-a6e9-ecc1a8b4bc6e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lbltotalcost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ ###0.00###">
+				<reportElement x="100" y="100" width="62" height="16" uuid="2f29b36f-1c37-43f1-a0f2-43cf87ff7db0"/>
+				<textFieldExpression><![CDATA[$P{curcost}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="100" width="80" height="19" uuid="f483285f-a1ad-41a1-93e8-ab62b5067104"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblrouting}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="77" width="80" height="19" uuid="af9b306e-788d-4594-a8eb-4c6b258fdc0c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblbomid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="78" width="131" height="16" uuid="509a2f3f-9133-4dd2-8298-53cac68a3e33"/>
+				<textFieldExpression><![CDATA[$F{bom_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="102" width="131" height="16" uuid="6990b8cc-775f-4caa-af9b-59705183acfe"/>
+				<textFieldExpression><![CDATA[$F{wf_id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="72" height="20" uuid="0ff780fc-8069-4fd5-986b-c02ea08fc766"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lbloperation}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<textField>
+				<reportElement x="299" y="0" width="73" height="20" uuid="e644d1f5-f4d5-425b-ac32-5df7d261d21f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lbllaborrate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="79" height="20" uuid="a1cfdf8d-30f1-49f7-8e4d-9b49c3dbb42b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblburdenrate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="-1" width="72" height="20" uuid="a10bd22e-38a5-443a-9848-7784115e7bd7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblopdesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="0" width="64" height="20" uuid="1ca66945-1d11-40e1-b879-a906a7415776"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblrunhours}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="110" height="20" uuid="66ecc0be-b066-49be-b133-1db7a8ffd48f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.bomop.lblopcost}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<textField pattern="#,###.##">
+				<reportElement x="384" y="1" width="62" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<textFieldExpression><![CDATA[$F{wf_run_hours}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="131" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
+				<textFieldExpression><![CDATA[$F{wf_op_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="0" width="72" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<textFieldExpression><![CDATA[$F{wf_op}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="30" y="16" width="102" height="10" uuid="1de54d85-2348-4cd6-ad1f-afe214f2d5dc"/>
+				<subreportParameter name="op">
+					<subreportParameterExpression><![CDATA[$F{wf_op}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="part">
+					<subreportParameterExpression><![CDATA[$F{it_item}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="qty">
+					<subreportParameterExpression><![CDATA[1.0]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="bom">
+					<subreportParameterExpression><![CDATA[$F{bom_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "bomcomp.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="#,##0.00">
+				<reportElement x="220" y="0" width="79" height="16" uuid="8c4f9073-1456-4ab8-b4ac-0b6efab24997"/>
+				<textFieldExpression><![CDATA[$F{wc_bdn_rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="299" y="1" width="83" height="16" uuid="bb3347d0-9d51-4e5e-9e4b-d39891e047e5"/>
+				<textFieldExpression><![CDATA[$F{wc_run_rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="460" y="1" width="79" height="16" uuid="6590ba52-7798-43dd-9cbc-4e910ebab648"/>
+				<textFieldExpression><![CDATA[new Double(($F{wc_bdn_rate}.doubleValue() * $F{wf_run_hours}.doubleValue()) + ($F{wc_run_rate}.doubleValue() * $F{wf_run_hours}.doubleValue()))]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28" splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="28" splitType="Stretch"/>
+	</lastPageFooter>
+</jasperReport>

@@ -2193,7 +2193,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
     private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
        if (! tbkey.getText().isEmpty())
-        OVData.printBOMJasper(tbkey.getText(), tbbomid.getText(), tbtotmaterial.getText(), tbtotoperational.getText(), tbparentcostCUR.getText()); 
+        OVData.printBOMJasper(tbkey.getText(), tbbomid.getText(), tbtotmaterialsim.getText(), String.valueOf(bsParseDouble(tbparentcostCUR.getText()) - bsParseDouble(tbtotmaterialsim.getText())), tbparentcostCUR.getText()); 
     }//GEN-LAST:event_btpdfActionPerformed
 
     private void ddcompActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcompActionPerformed
