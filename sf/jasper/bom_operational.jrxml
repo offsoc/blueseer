@@ -130,7 +130,9 @@ order by wf_op;
 				<textFieldExpression><![CDATA[$R{jasper.bomop.lblmatcost}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ ###0.00###">
-				<reportElement x="101" y="78" width="62" height="16" uuid="c7e8159d-aa08-4ef1-92e0-695c54ca9a96"/>
+				<reportElement x="100" y="78" width="62" height="16" uuid="c7e8159d-aa08-4ef1-92e0-695c54ca9a96">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$P{matcost}]]></textFieldExpression>
 			</textField>
 			<textField>
