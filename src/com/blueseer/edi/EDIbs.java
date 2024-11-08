@@ -403,8 +403,8 @@ public static void main(String args[]) throws IOException {
                 if (listOfFiles[i].isFile()) {
                // System.out.println("file: " + listOfFiles[i].getName());
                   if(listOfFiles[i].length() == 0) { 
-                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,,,," ); 
-                  listOfFiles[i].delete();
+                  System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",zerosize,,,,,,,,,,,," ); // leave for next event
+                 // listOfFiles[i].delete();
                   } else { 
                   outfile = listOfFiles[i].getName();
                   Path oldpath = Paths.get(listOfFiles[i].getPath());
@@ -428,7 +428,8 @@ public static void main(String args[]) throws IOException {
                         EDI.reduceFile(Paths.get(listOfFiles[i].getPath()), outdir, keepers);
                         //Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
                     } else {
-                        System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + "," + m[1]);
+                        System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + ",processing file of size: " + listOfFiles[i].length() + ",,,,,,,,,,,," + m[1] );
+                 
                     }
                     if (! archdir.isEmpty()) {
                        Path archivepath = Paths.get(archdir + listOfFiles[i].getName());
@@ -573,10 +574,10 @@ public static void main(String args[]) throws IOException {
                     // now delete if match found...otherwise leave file in place.
                     if (match) {
                         if (deleteFile) {
-                            listOfFiles[i].delete(); // now delete file
-                             System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() + " file placed and deleted"); 
-                         } else {
-                            System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() + " file placed but not deleted"); 
+                            System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() + " file placed and deleted.  " + "file size: " + listOfFiles[i].length()); 
+                            listOfFiles[i].delete(); // now delete file 
+                        } else {
+                            System.out.println(dfdate.format(now) + " copy file " + listOfFiles[i].getName() + " to " + newpath.toString() + " file placed but not deleted. " + "file size: " + listOfFiles[i].length()); 
                         }
                     } else {
                     System.out.println(dfdate.format(now) + " " + listOfFiles[i].getName() + " file cannot be placed" );     
