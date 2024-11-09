@@ -4142,9 +4142,9 @@ public class ordData {
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
-                 " update bill_mstr set bill_status = " + "'" + status + "'" + "," +
-                 " bill_ref = " + "'" + ref + "'" +
-                 " where bill_nbr = " + "'" + nbr + "'" + ";" );
+                 " update quo_mstr set quo_status = " + "'" + status + "'" + "," +
+                 " quo_ref = " + "'" + ref + "'" +
+                 " where quo_nbr = " + "'" + nbr + "'" + ";" );
         }
         catch (SQLException s){
              MainFrame.bslog(s);
