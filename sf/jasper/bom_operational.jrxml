@@ -33,8 +33,7 @@ inner join bom_mstr on bom_item = it_item
 inner join wf_mstr on wf_id = bom_routing
 inner join wc_mstr on wc_cell = wf_cell
 where it_item  =  $P{myid} and bom_id = $P{mybom}
-order by wf_op;
-]]>
+order by wf_op;]]>
 	</queryString>
 	<field name="it_item" class="java.lang.String"/>
 	<field name="it_desc" class="java.lang.String">
@@ -215,7 +214,7 @@ order by wf_op;
 	</columnHeader>
 	<detail>
 		<band height="35" splitType="Stretch">
-			<textField pattern="#,###.##">
+			<textField pattern="###.#####">
 				<reportElement x="384" y="1" width="62" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{wf_run_hours}]]></textFieldExpression>
 			</textField>
