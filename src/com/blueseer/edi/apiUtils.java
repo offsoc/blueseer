@@ -2259,7 +2259,7 @@ public class apiUtils {
       //  messagePart.setDataHandler(new DataHandler(ds));
             
         InternetHeaders fileHeaders = new InternetHeaders();
-        fileHeaders.setHeader("Content-Type", "multipart/mixed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+        fileHeaders.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
         fileHeaders.setHeader("Content-Transfer-Encoding", "binary");
         MimeBodyPart messagePart = new MimeBodyPart(fileHeaders, messg);
         messagePart.removeHeader("Content-Type");
@@ -2286,7 +2286,7 @@ public class apiUtils {
      //   messagePart.setHeader("Content-Type", "text/plain");
      //   messagePart.setHeader("Content-Transfer-Encoding", "binary");
      //   messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
-        messagePart.addHeader("Content-Type", "multipart/mixed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+        messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
         
        // messagePart.addHeader("Content-Type", "multipart/signed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
       //  messagePart.setHeader("Content-Disposition", "attachment; filename=" + filename);
@@ -3364,7 +3364,7 @@ public class apiUtils {
         
         
         if (mbp != null) {
-            headers.put("Message-ID", "BlueSeer-unique." + "." + Long.toHexString(System.currentTimeMillis()));
+           // headers.put("Message-ID", "BlueSeer-unique." + "." + Long.toHexString(System.currentTimeMillis()));
             headers.put("Subject", "your requested MDN Response");            
             headers.put("AS2-Version", "1.2");
             x = new mdn(HttpServletResponse.SC_OK, headers, new String(mbp.getInputStream().readAllBytes(), StandardCharsets.UTF_8), boundary);
