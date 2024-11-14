@@ -160,7 +160,7 @@ public class AS2Serv extends HttpServlet {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
-            response.setHeader("Content-Transfer-Encoding", "7bit");            
+            response.setHeader("Content-Transfer-Encoding", "binary");            
             response.setStatus(thismdn.status());
             response.getWriter().print(thismdn.message());
             
@@ -171,6 +171,11 @@ public class AS2Serv extends HttpServlet {
             String debugfile = "debugMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+              //  for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
+              //      String h = z.getKey() + ": " + z.getValue();
+              //      stream.write(h.getBytes());
+              //  }    
+           // stream.write("Content-Transfer-Encoding: binary".getBytes());
             stream.write(thismdn.message().getBytes());
             }
         }

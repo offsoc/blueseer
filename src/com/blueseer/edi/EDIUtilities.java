@@ -908,9 +908,49 @@ public class EDIUtilities extends javax.swing.JPanel {
         taoutput.setText("");
         String mic = "";
         String[] x = new String[]{"","","","","",""};
+        
+        if (tainput.getText().isEmpty()) {    
+        File file = getfile("open target file");
+        taoutput.setText("");
+        tainput.setText("");
+        // executeTask(ddtable.getSelectedItem().toString(), null, "");
+        if (file != null && file.exists()) {
+                try {  
+                    BufferedReader f = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+                     char[] cbuf = new char[(int) file.length()];
+                     f.read(cbuf); 
+                     f.close();
+                    
+                     StringBuilder docstring = new StringBuilder();
+                    for (int i = 0; i < cbuf.length; i++) {
+                        docstring.append(cbuf[i]);
+                    }
+                    tainput.setText(docstring.toString());
+                  //  lines = Files.readAllLines(file.toPath());
+                    /*
+                    for (String segment : lines ) {
+                        tainput.append(segment);
+                        tainput.append("\n");
+                    }
+                    */
+                    tainput.setCaretPosition(0);
+                    panelinput.setVisible(true);
+                    
+                    
+                } catch (MalformedInputException m) {
+                    bslog(m);
+                    bsmf.MainFrame.show("Input file may not be UTF-8 encoded");
+                } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
+                }   
+        }
+        } // if tainput is empty   
+        
+        
         if (! tainput.getText().isEmpty()) {
             try { 
-                x = verifySignatureView(tainput.getText().getBytes(), "text/plain",null);
+                x = verifySignatureView(tainput.getText().getBytes(), "text/plain", null);
             } catch (MessagingException ex) {
                 Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
