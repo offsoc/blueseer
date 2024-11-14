@@ -2891,13 +2891,13 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> sent from: <%s> to: <%s>
-                at %s was not signed.
-                """.formatted(filename, sender, receiver, now);
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append("\r").append("\n");
+            zb.append("was not signed.");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -2952,15 +2952,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> sent from: <%s> to: <%s>
-                at %s failed.
-                   Error: unable to retrieve contents of File
-                   Error:  FileBytesRead is null
-                """.formatted(filename, sender, receiver, now);
+       
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append("\r").append("\n");
+            zb.append("failed. Error: unable to retrieve contents of File. Error:  FileBytesRead is null  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -2980,14 +2979,13 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> sent from: <%s> to: <%s>
-                at %s failed.
-                   Error: Signature content is null
-                """.formatted(filename, sender, receiver, now);
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: Signature content is null  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3007,14 +3005,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> sent from: <%s> to: <%s>
-                at %s failed.
-                   Error: Invalid Signature
-                """.formatted(filename, sender, receiver, now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: Invalid Signature  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3034,12 +3032,15 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message transmitted at <%s> was transmitted with null content.
-                """.formatted(now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: The message was transmitted with null content.  ");
+        
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3059,12 +3060,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                Unable to decrypt message transmitted at <%s>.  Potential bad public key.
-                """.formatted(now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: Unable to decrypt message transmitted at <%s>.  Potential bad public key.  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3084,12 +3087,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message transmitted at <%s> had unrecognizable HTTP headers.
-                """.formatted(now);
+       
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: The message had unrecognizable HTTP headers.  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3109,12 +3114,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message transmitted at <%s> had zero HTTP headers.
-                """.formatted(now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: The message had zero HTTP headers.  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3134,12 +3141,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> transmitted at <%s> was transmitted to unknown receiver ID.
-                """.formatted(filename, now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: The message was transmitted to unknown receiver ID.  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3159,12 +3168,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> transmitted at <%s> was transmitted by unknown sender ID.
-                """.formatted(filename, now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: The message was transmitted by unknown sender ID.  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3185,12 +3196,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> transmitted at <%s>... unable to determine sender / receiver keys.
-                """.formatted(filename, now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: unable to determine sender / receiver keys  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3210,12 +3223,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> transmitted at <%s>... encryption is required.
-                """.formatted(filename, now);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: encryption is required  ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -3235,15 +3250,14 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
-        String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> failed and has been rejected.
-                The message was transmitted by <%s>.
-                Internal server case 9999.
-                """.formatted(filename, receiver, now, subject, sender);
+        
+        StringBuilder zb = new StringBuilder();
+            zb.append("The Message ").append(filename).append(" sent from: ").append(sender).append(" to: ").append(receiver).append("\r").append("\n");
+            zb.append(" at ").append(now).append(" failed.").append("\r").append("\n");
+            zb.append("Error: Internal server error 9999 ");
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           MimeMultipart mpInner = bundleit(zb.toString(), receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
