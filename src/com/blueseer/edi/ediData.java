@@ -129,8 +129,8 @@ public class ediData {
                 " and exr_ovaddr = ? and exr_gsid = ? and exr_type = ?";
         String sqlInsert = "insert into edi_xref (exr_tpid, exr_tpaddr, exr_ovaddr, exr_gsid, exr_type) " 
                         + " values (?,?,?,?,?); "; 
-        String sqlUpdate = "update edi_xref set exr_tpid = ?, exr_tpaddr = ?, exr_ovaddr = ?, " +
-                           " exr_gsid = ?, exr_type = ? ; "; 
+        String sqlUpdate = "update edi_xref set exr_tpaddr = ?, exr_ovaddr = ? " +
+                           " where exr_tpid = ? and exr_gsid = ? and exr_type = ? ; "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.exr_tpid);
@@ -150,9 +150,9 @@ public class ediData {
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
-            psu.setString(1, x.exr_tpid);
-             psu.setString(2, x.exr_tpaddr);
-             psu.setString(3, x.exr_ovaddr);
+             psu.setString(1, x.exr_tpaddr);
+             psu.setString(2, x.exr_ovaddr);
+             psu.setString(3, x.exr_tpid);
              psu.setString(4, x.exr_gsid);
              psu.setString(5, x.exr_type); 
             int rows = psu.executeUpdate();    
@@ -171,13 +171,13 @@ public class ediData {
 
     public static String[] updateEDIXref(edi_xref x) {
         String[] m = new String[2];
-        String sqlUpdate = "update edi_xref set exr_tpid = ?, exr_tpaddr = ?, exr_ovaddr = ?, " +
-                           " exr_gsid = ?, exr_type = ? ; "; 
+        String sqlUpdate = "update edi_xref set exr_tpaddr = ?, exr_ovaddr = ? " +
+                           " where exr_tpid = ? and exr_gsid = ? and exr_type = ? ; "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
-        ps.setString(1, x.exr_tpid);
-             ps.setString(2, x.exr_tpaddr);
-             ps.setString(3, x.exr_ovaddr);
+             ps.setString(1, x.exr_tpaddr);
+             ps.setString(2, x.exr_ovaddr);
+             ps.setString(3, x.exr_tpid);
              ps.setString(4, x.exr_gsid);
              ps.setString(5, x.exr_type);  
         int rows = ps.executeUpdate();

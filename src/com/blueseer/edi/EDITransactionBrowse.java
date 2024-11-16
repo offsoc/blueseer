@@ -277,9 +277,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
                     " edx_sender, edx_receiver, edx_infiletype, edx_inbatch, edx_outbatch, edx_ref, edx_ts, edx_ack, edx_status, edx_outfiletype,  " +
-                    " coalesce(elg_severity,'success') as detstatus " +
+                    " (select elg_severity from edi_log where elg_idxnbr = edx_id and elg_comkey = edx_comkey order by elg_id desc limit 1) as detstatus " +
                     " FROM edi_idx  " +
-                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
+                   // " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " AND edx_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 

@@ -637,7 +637,7 @@ CREATE TABLE IF NOT EXISTS `as2_log` (
   `as2l_dir` varchar(3) NOT NULL  DEFAULT '',
   `as2l_status` varchar(10) NOT NULL  DEFAULT '',
   `as2l_messg` varchar(200) NOT NULL  DEFAULT '',
-  `as2l_datetime` varchar(16) NOT NULL DEFAULT '',
+  `as2l_datetime` varchar(17) NOT NULL DEFAULT '',
   `as2l_mdn` varchar(100) NOT NULL  DEFAULT '',
   `as2l_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

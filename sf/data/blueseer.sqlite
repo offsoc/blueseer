@@ -714,7 +714,7 @@ CREATE TABLE "as2_log" (
   "as2l_dir" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2l_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2l_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
-  "as2l_datetime" varchar(16) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_datetime" varchar(17) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2l_mdn" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2l_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
