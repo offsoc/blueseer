@@ -110,7 +110,7 @@ public class Generic810i extends com.blueseer.edi.EDIMap {
          /* Load Sales Order */
          /* call processDB ONLY if the output is direction of DataBase Internal */
         if (! isError) {
-         processDB(c,com.blueseer.edi.EDI.createVoucherFrom810i(e, c)); 
+         processDB(c,com.blueseer.edi.EDI.createVoucherFrom810i(e, c), null); 
         }
         
         return packagePayLoad(c);

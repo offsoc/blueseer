@@ -176,7 +176,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
 
      /* Load Sales Order */
      /* call processDB ONLY if the output is database write */
-    processDB(c,com.blueseer.edi.EDI.createSOFrom850(e, c));
+    processDB(c,com.blueseer.edi.EDI.createSOFrom850(e, c), null);
 
     return packagePayLoad(c);  //required...
         

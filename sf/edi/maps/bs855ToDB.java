@@ -9,4 +9,4 @@ mappedInput.clear();
         
         
 /* call processDB ONLY if the output is direction of DataBase Internal */
-processDB(c,com.blueseer.pur.purData.updatePOFromAck(po, status));
+processDB(c,com.blueseer.pur.purData.updatePOFromAck(po, status), null);

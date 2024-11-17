@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
+import static com.blueseer.edi.ediData.addUpdateEDIMetaMulti;
 import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
 import static com.blueseer.edi.ediData.isSuppressEmptyTag;
@@ -984,9 +985,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 
      }
     
-    public void processDB(String[] c, String[] m) {
+    public void processDB(String[] c, String[] m, ArrayList<String[]> ta) {
         c[23] = m[0];  // set return status
         c[38] = m[1];
+        // set turn around if return status = '0' and ta != null
+        if (m[0].equals("0") && ta != null) {
+            addUpdateEDIMetaMulti(ta);
+        }
     }
            
     public void readOSF(String osf)  {

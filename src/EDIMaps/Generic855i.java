@@ -66,7 +66,7 @@ public class Generic855i extends com.blueseer.edi.EDIMap {
         
         
          /* call processDB ONLY if the output is direction of DataBase Internal */
-        processDB(c,com.blueseer.pur.purData.updatePOFromAck(po, status));
+        processDB(c,com.blueseer.pur.purData.updatePOFromAck(po, status), null);
         
         return packagePayLoad(c);
         

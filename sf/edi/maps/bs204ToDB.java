@@ -95,5 +95,5 @@ for (int i = 1; i <= linecount; i++) {
 
      /* Load Sales Order */
      /* call processDB ONLY if the output is database write */
-    processDB(c,com.blueseer.edi.EDI.createCFOFrom204(e, c));
+    processDB(c,com.blueseer.edi.EDI.createCFOFrom204(e, c), null);
 

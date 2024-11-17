@@ -2490,6 +2490,165 @@ public class ediData {
     
     
     //misc
+    public static boolean addUpdateEDIMeta(String id, String type, String key, String value) {
+        boolean x = false;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                res = st.executeQuery("SELECT edim_value FROM edi_meta where edim_id = " + "'" + id + "'"
+                        + " AND edim_type = " + "'" + type + "'"
+                        + " AND edim_key = " + "'" + key + "'"     
+                        + " ;");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i == 0) {
+                    st.executeUpdate("insert into edi_meta (edim_id, edim_type, edim_key, edim_value) values ( "
+                            + "'" + id + "'" + ","
+                            + "'" + type + "'" + ","
+                            + "'" + key + "'" + ","
+                            + "'" + value + "'" + ")"
+                            + ";");
+                    x = true;
+                } else {
+                    st.executeUpdate("update edi_meta set "
+                            + " edim_value = " + "'" + value + "'"
+                            + " where edim_id = " + "'" + id + "'" + " and "
+                            + " edim_type = " +  "'" + type + "'" + " and "
+                            + " edim_key = " +  "'" + key + "'"  
+                            + ";");
+                    x = true;
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+    public static boolean addUpdateEDIMetaMulti(ArrayList<String[]> list) {
+        boolean x = false;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                for (String[] s : list) {  // id, type, key, value
+                i = 0;
+                
+                res = st.executeQuery("SELECT edim_value FROM edi_meta where edim_id = " + "'" + s[0] + "'"
+                        + " AND edim_type = " + "'" + s[1] + "'"
+                        + " AND edim_key = " + "'" + s[2] + "'"     
+                        + " ;");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i == 0) {
+                    st.executeUpdate("insert into edi_meta (edim_id, edim_type, edim_key, edim_value) values ( "
+                            + "'" + s[0] + "'" + ","
+                            + "'" + s[1] + "'" + ","
+                            + "'" + s[2] + "'" + ","
+                            + "'" + s[3] + "'" + ")"
+                            + ";");
+                    x = true;
+                } else {
+                    st.executeUpdate("update edi_meta set "
+                            + " edim_value = " + "'" + s[3] + "'"
+                            + " where edim_id = " + "'" + s[0] + "'" + " and "
+                            + " edim_type = " +  "'" + s[1] + "'" + " and "
+                            + " edim_key = " +  "'" + s[2] + "'"  
+                            + ";");
+                    x = true;
+                }
+                } // for loop
+            } 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+    
+    public static String getEDIMetaValue(String id, String type, String key) {
+         String x = "";
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select edim_value from edi_meta where " +
+                        " edim_id = " + "'" + id + "'" + " AND " +
+                        " edim_type = " + "'" + type + "'" + " AND " +
+                        " edim_key = " + "'" + key + "'" +
+                        " order by edim_value;" );
+               while (res.next()) {
+                x = res.getString("edim_value");                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }   
+    
+    
     public static boolean isValidAS2id(String id) {
         boolean x = false;
         String sql = "select * from as2_mstr where as2_id = ?;";

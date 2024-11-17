@@ -130,7 +130,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
          /* Load Sales Order */
          /* call processDB ONLY if the output is direction of DataBase Internal */
         if (! isError &&  purpose.equals("00")) {
-         processDB(c,com.blueseer.edi.EDI.createCFOFrom204(e, c)); 
+         processDB(c,com.blueseer.edi.EDI.createCFOFrom204(e, c), null); 
         }
         
         return packagePayLoad(c);

@@ -3023,3 +3023,9 @@ CREATE TABLE IF NOT EXISTS `usr_meta` (
   `usrm_value` varchar(200) NOT NULL DEFAULT '',
   `usrm_ref` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `edi_meta` (
+  `edim_id` varchar(30) NOT NULL DEFAULT '',
+  `edim_type` varchar(80) NOT NULL DEFAULT '',
+  `edim_key` varchar(80) NOT NULL DEFAULT '',
+  `edim_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

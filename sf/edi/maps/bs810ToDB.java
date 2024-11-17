@@ -64,6 +64,6 @@ import com.blueseer.utl.EDData;
          /* Load Invoice */
          /* call processDB ONLY if the output is direction of DataBase Internal */
         if (! isError) {
-         processDB(c,com.blueseer.edi.EDI.createVoucherFrom810i(e, c)); 
+         processDB(c,com.blueseer.edi.EDI.createVoucherFrom810i(e, c), null); 
         }
 
