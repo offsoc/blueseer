@@ -3933,8 +3933,15 @@ public class EDI {
         }  
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        if (defaults[19].isBlank()) { // if edi_doc is blank...no default found
+        messages.add(new String[]{"error","no EDITPDefaults found for (doctype/senderGS/receiverGS): " + doctype + "/" + EDData.getEDIgsid() + "/" + ids[1]} );
+        EDData.writeEDILogMulti(c, messages);
+        messages.clear();  // clear message here
+        return 1;   
+        } else {
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
         messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        }
         
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
@@ -3944,9 +3951,7 @@ public class EDI {
         c[21] = defaults[5];
         
         
-        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
-        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
-        
+        map = defaults[24];         
         c[2] = map;
         
         if (map.isEmpty()) {
@@ -4071,9 +4076,15 @@ public class EDI {
         // tpid, gsid, tpaddr, ovaddr, type
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        if (defaults[19].isBlank()) { // if edi_doc is blank...no default found
+        messages.add(new String[]{"error","no EDITPDefaults found for (doctype/senderGS/receiverGS): " + doctype + "/" + EDData.getEDIgsid() + "/" + ids[1]} );
+        EDData.writeEDILogMulti(c, messages);
+        messages.clear();  // clear message here
+        return 1;   
+        } else {
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
         messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
-        
+        }
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -4083,9 +4094,7 @@ public class EDI {
         
         
         
-        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
-        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
-        
+       map = defaults[24];         
         c[2] = map;
         
         if (map.isEmpty()) {
@@ -4209,9 +4218,15 @@ public class EDI {
         }    
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        if (defaults[19].isBlank()) { // if edi_doc is blank...no default found
+        messages.add(new String[]{"error","no EDITPDefaults found for (doctype/senderGS/receiverGS): " + doctype + "/" + EDData.getEDIgsid() + "/" + ids[1]} );
+        EDData.writeEDILogMulti(c, messages);
+        messages.clear();  // clear message here
+        return 1;   
+        } else {
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
         messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
-        
+        }
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -4220,9 +4235,7 @@ public class EDI {
         c[21] = defaults[5];
         
                
-        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
-        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
-        
+        map = defaults[24];         
         c[2] = map;
         
           if (map.isEmpty()) {
@@ -4345,9 +4358,15 @@ public class EDI {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         }  
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        if (defaults[19].isBlank()) { // if edi_doc is blank...no default found
+        messages.add(new String[]{"error","no EDITPDefaults found for (doctype/senderGS/receiverGS): " + doctype + "/" + EDData.getEDIgsid() + "/" + ids[1]} );
+        EDData.writeEDILogMulti(c, messages);
+        messages.clear();  // clear message here
+        return 1;   
+        } else {
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
         messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
-        
+        }
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -4355,10 +4374,7 @@ public class EDI {
         c[0] = defaults[2];
         c[21] = defaults[5];
         
-              
-        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
-        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
-        
+        map = defaults[24];         
         c[2] = map;
         
           if (map.isEmpty()) {
@@ -4387,7 +4403,8 @@ public class EDI {
         
          // call map 
         try {
-        Class cls = Class.forName(map);
+        URLClassLoader cl = getEDIClassLoader();     
+        Class cls = Class.forName(map,true,cl); 
         Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
         Object oc = method.invoke(obj, doc, c, messages);

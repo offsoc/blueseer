@@ -4240,12 +4240,12 @@ public class EDData {
                             " edx_outfile = " + "'" + c[8] + "'" + "," +
                             " edx_ackfile = " + "'" + "" + "'" + "," +
                             " edx_ack = " + "'" + "0" + "'" + "," +
-                            " edx_segdelim = " + "'" + Integer.valueOf(c[9].toString()) + "'" + "," +
-                            " edx_elmdelim = " + "'" + Integer.valueOf(c[10].toString()) + "'" + "," +  
-                            " edx_subdelim = " + "'" + Integer.valueOf(c[11].toString()) + "'" + "," + 
-                            " edx_outsegdelim = " + "'" + Integer.valueOf(c[35].toString()) + "'" + "," +
-                            " edx_outelmdelim = " + "'" + Integer.valueOf(c[36].toString()) + "'" + "," +  
-                            " edx_outsubdelim = " + "'" + Integer.valueOf(c[37].toString()) + "'" + "," + 
+                            " edx_segdelim = " + "'" + Integer.valueOf(c[9]) + "'" + "," +
+                            " edx_elmdelim = " + "'" + Integer.valueOf(c[10]) + "'" + "," +  
+                            " edx_subdelim = " + "'" + Integer.valueOf(c[11]) + "'" + "," + 
+                            " edx_outsegdelim = " + "'" + Integer.valueOf(c[35]) + "'" + "," +
+                            " edx_outelmdelim = " + "'" + Integer.valueOf(c[36]) + "'" + "," +  
+                            " edx_outsubdelim = " + "'" + Integer.valueOf(c[37]) + "'" + "," + 
                             " edx_status = " + "'" + c[23] + "'"  + 
                             " where edx_id = " + "'" + key + "'" +        
                             ";");
